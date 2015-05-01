@@ -36,7 +36,7 @@ for block in blocks:
 	soup2 = BeautifulSoup(html2)
 	
 	fileBlocks = soup2.findAll('div',{'class':'attachment-details'})
-	
+	'''
 	for fileBlock in fileBlocks:
 		fileUrl = fileBlock.a['href']
 		fileUrl = fileUrl.replace("/government","http://www.gov.uk/government")
@@ -61,5 +61,5 @@ for block in blocks:
 			todays_date = str(datetime.now())
 		
 			scraperwiki.sqlite.save(unique_keys=['l'], data={"l": fileUrl, "f": filename, "d": todays_date })
-			
+		'''	
 			print filename

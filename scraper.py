@@ -28,38 +28,37 @@ blocks = soup.findAll('li', {'class':'publication document-row'})
 for block in blocks:
 
 	link = block.a['href']
-
+	title = block.a.text
 	# add the right prefix onto the url
 	pageUrl = link.replace("/government","http://www.gov.uk/government")
 	
-	html2 = urllib2.urlopen(pageUrl)
-	soup2 = BeautifulSoup(html2)
-	
-	fileBlocks = soup2.findAll('div',{'class':'attachment-details'})
-	'''
-	for fileBlock in fileBlocks:
-		fileUrl = fileBlock.a['href']
-		fileUrl = fileUrl.replace("/government","http://www.gov.uk/government")
-		fileUrl = fileUrl.replace(".csv/preview",".csv")
+	if '25,000:' in title:
+		html2 = urllib2.urlopen(pageUrl)
+		soup2 = BeautifulSoup(html2)
 		
-		title = fileBlock.h2.contents[0]
-		titleTest = title.find('Download CSV')
-		
-		if titleTest == None:
-			print 'not a csv'
-		else:
-			# create the right strings for the new filename
-			title = title.upper().strip()
-			csvYr = title.split(' ')[-1]
-			csvYr = csvYr.replace("200","20")
+		fileBlocks = soup2.findAll('div',{'class':'attachment-details'})
+		for fileBlock in fileBlocks:
+			fileUrl = fileBlock.a['href']
+			fileUrl = fileUrl.replace("/government","http://www.gov.uk/government")
+			fileUrl = fileUrl.replace(".csv/preview",".csv")
 			
-			csvMth = title.split(' ')[-2][:3]
-			csvMth = convert_mth_strings(csvMth);
-		
-			filename = entity_id + "_" + csvYr + "_" + csvMth
-		
-			todays_date = str(datetime.now())
-		
-			scraperwiki.sqlite.save(unique_keys=['l'], data={"l": fileUrl, "f": filename, "d": todays_date })
-		'''	
-			print filename
+			title = fileBlock.h2.contents[0]
+			titleTest = title.find('Download CSV')
+			
+			if titleTest == None:
+				print 'not a csv'
+			else:
+				# create the right strings for the new filename
+				title = title.upper().strip()
+				csvYr = title.split(' ')[-1]
+				csvYr = csvYr.replace("200","20")
+				
+				csvMth = title.split(' ')[-2][:3]
+				csvMth = convert_mth_strings(csvMth);
+			
+				filename = entity_id + "_" + csvYr + "_" + csvMth
+			
+				todays_date = str(datetime.now())
+			
+				scraperwiki.sqlite.save(unique_keys=['l'], data={"l": fileUrl, "f": filename, "d": todays_date })
+				print filename
